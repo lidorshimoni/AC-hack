@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Infra">
+      <UniqueIdentifier>{2b5ed88a-2a7a-4e04-b090-40226213d515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\memory">
+      <UniqueIdentifier>{1cebe999-3f3d-4dd5-8722-73c870092e48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\process">
+      <UniqueIdentifier>{1b3f1988-8965-4b88-a9a9-dc2c210c9593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\player">
+      <UniqueIdentifier>{457c428e-e1ef-4ffd-aea8-1f2b5f98dd91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\opengl">
+      <UniqueIdentifier>{2219dd5e-aa89-4d71-acb8-7ba22260ea12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\geometry">
+      <UniqueIdentifier>{ade6873c-9b0a-46b8-8d09-abc4c0d56704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\aimbot">
+      <UniqueIdentifier>{6f2c0495-71d6-4592-a0a4-131c14aea46c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\opengl\menu">
+      <UniqueIdentifier>{f953580a-d476-420f-8e73-1fad371ba612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\opengl\text">
+      <UniqueIdentifier>{abf6dea2-2bc6-43f5-a6c0-aa87cd3fb552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\opengl\hack">
+      <UniqueIdentifier>{2ae9cbce-6a52-4539-ae35-e8d7a84e439a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infra\esp">
+      <UniqueIdentifier>{14aa8d92-16c3-4ae9-87fe-e8fcd9dbd3bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assault_cube">
+      <UniqueIdentifier>{34c9d72f-f59f-4d22-9097-ef0b7016756b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\memory\mem.cpp">
+      <Filter>Infra\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\player\player.cpp">
+      <Filter>Infra\player</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\process\proc.cpp">
+      <Filter>Infra\process</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\aimbot\aimbot.cpp">
+      <Filter>Infra\aimbot</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\geometry\geom.cpp">
+      <Filter>Infra\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\opengl\text\gltext.cpp">
+      <Filter>Infra\opengl\text</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\opengl\hack\hackgl.cpp">
+      <Filter>Infra\opengl\hack</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\opengl\menu\menu.cpp">
+      <Filter>Infra\opengl\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="infra\esp\esp.cpp">
+      <Filter>Infra\esp</Filter>
+    </ClCompile>
+    <ClCompile Include="assault_cube.cpp">
+      <Filter>assault_cube</Filter>
+    </ClCompile>
+    <ClCompile Include="AC_Player.cpp">
+      <Filter>assault_cube</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\memory\mem.h">
+      <Filter>Infra\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\player\player.h">
+      <Filter>Infra\player</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\process\proc.h">
+      <Filter>Infra\process</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\aimbot\aimbot.h">
+      <Filter>Infra\aimbot</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\geometry\geom.h">
+      <Filter>Infra\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\opengl\text\gltext.h">
+      <Filter>Infra\opengl\text</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\opengl\hack\hackgl.h">
+      <Filter>Infra\opengl\hack</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\opengl\menu\menu.h">
+      <Filter>Infra\opengl\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="infra\esp\esp.h">
+      <Filter>Infra\esp</Filter>
+    </ClInclude>
+    <ClInclude Include="assault_cube_sdk.h">
+      <Filter>assault_cube</Filter>
+    </ClInclude>
+    <ClInclude Include="assault_cube.h">
+      <Filter>assault_cube</Filter>
+    </ClInclude>
+    <ClInclude Include="AC_Player.h">
+      <Filter>assault_cube</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

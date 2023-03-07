@@ -34,7 +34,7 @@ private:
 
 	// game parameters
 	int viewport[4];
-	float* matrix = (float*)(0x57dfD0);
+	float* matrix = (float*)(VIEW_MATRIX_OFFSET);
 	bool is_game_local = true;
 	bool is_game_in_teams = true;
 	
@@ -58,6 +58,7 @@ private:
 	bool aimbotSwitch = false;
 	bool espSwitch = false;
 	bool menuSwitch = true;
+	bool isSuicide = false;
 
 	int hack_loop_counter = 0;
 

@@ -6,7 +6,6 @@ AssaultCube::AssaultCube()
 	this->moduleBase = (uintptr_t)GetModuleHandle("ac_client.exe");
 
 	StartShootThread(&this->aimbotSwitch);
-
 }
 
 AssaultCube::~AssaultCube()
@@ -82,9 +81,9 @@ void AssaultCube::draw_esp()
 
 void AssaultCube::read_player_data()
 {
-	this->player_entity = *(playerent**)(this->moduleBase + 0x17E360);
-	this->entity_list_ptr = (playerent * (*)[32])(*(void**)(this->moduleBase + 0x18ac04));
-	this->num_of_players = *(int*)(this->moduleBase + 0x18AC0C);
+	this->player_entity = *(playerent**)(this->moduleBase + PLAYER_ENTITY_PTR_OFFSET);
+	this->entity_list_ptr = (playerent * (*)[32])(*(void**)(this->moduleBase + ENTITY_LIST_PTR_OFFSET));
+	this->num_of_players = *(int*)(this->moduleBase + NUMBER_OF_PLAYERS_OFFSET);
 
 	if (this->player_entity)
 	{
@@ -100,18 +99,13 @@ void AssaultCube::read_player_data()
 			playerent* e = (*(this->entity_list_ptr))[i];
 			if (!e || !e->vTable) continue;
 
-			//if (e->vTable == (void*)0x4E4A98 || e->vTable == (void*)0x4E4AC0)
-			//{
 			//std::cout << i << " " << e->name << " - vTable: " << std::hex << e->vTable << std::dec << std::endl;
 			players.push_back(AC_Player(e, this->is_game_in_teams, this->player_entity->team, matrix, viewport[2], viewport[3], this->player_entity));
-			//}
 		}
 
 		for (auto& p : players)
 		{
 			p.Calculate(FW::Aimbot_t::localPlayer);
-			//std::cout << p.name << std::endl;
-
 		}
 
 	}
@@ -138,37 +132,37 @@ void AssaultCube::read_game_data()
 
 void AssaultCube::print_status()
 {
-	//if (entity_list_ptr && *entity_list_ptr)
-	//{
-	//	//for (const player_t* temp_player_entity : *entity_list)
-	//	for (int i = 1; i < sizeof(*entity_list_ptr) / sizeof(*entity_list_ptr[0]) && (*entity_list_ptr)[i]; i++)
-	//	{
-	//		if ((*entity_list_ptr)[i])
-	//			std::cout << i << " " << std::hex << (*entity_list_ptr)[i]->name << std::dec << " " << (*entity_list_ptr)[i]->health << std::endl;
-	//	}
-	//}
 }
 
 void AssaultCube::freeze_hack_values()
 {
 	if (this->player_entity)
 	{
-		if (healthSwitch)
+		if (this->isSuicide)
 		{
-			player_entity->health = 1337;
-			player_entity->armor = 1337;
+			this->player_entity->state = DEAD;
+			this->isSuicide = false;
 		}
-
-		if (AmmoSwitch)
+		if (this->healthSwitch)
 		{
-			player_entity->grenade_ammo = 1337;
-			player_entity->pistol_ammo = 1337;
-			player_entity->assault_ammo = 1337;
-			player_entity->carabine_ammo = 1337;
-			player_entity->double_pistol_ammo = 1337;
-			player_entity->shotgun_ammo = 1337;
-			player_entity->smg_ammo = 1337;
-			player_entity->sniper_ammo = 1337;
+			this->player_entity->health = 1337;
+			this->player_entity->armor = 1337;
+		}
+		if (this->AmmoSwitch)
+		{
+			this->player_entity->grenade_ammo = 1337;
+			this->player_entity->pistol_ammo = 1337;
+			this->player_entity->assault_ammo = 1337;
+			this->player_entity->carabine_ammo = 1337;
+			this->player_entity->double_pistol_ammo = 1337;
+			this->player_entity->shotgun_ammo = 1337;
+			this->player_entity->smg_ammo = 1337;
+			this->player_entity->sniper_ammo = 1337;
+		}
+		if (this->AmmoSwitch != this->no_recoil_hack->bStatus && this->are_hacks_initiallized )
+		{
+			this->no_recoil_hack->Toggle();
+			this->no_fire_delay_hack->Toggle();
 		}
 		if (GetAsyncKeyState(VK_RBUTTON) && this->aimbotSwitch)
 		{
@@ -191,22 +185,18 @@ bool AssaultCube::handle_user_input()
 	}
 	if (GetAsyncKeyState(VK_F2) & 1)
 	{
-		if (this->are_hacks_initiallized)
-		{
-			this->AmmoSwitch = !this->AmmoSwitch;
-			this->no_recoil_hack->Toggle();
-			this->no_fire_delay_hack->Toggle();
-		}
+		this->AmmoSwitch = !this->AmmoSwitch;
 	}
 	if (GetAsyncKeyState(VK_F3) & 1)
 	{
-		if (this->entity_list_ptr && *(this->entity_list_ptr))
+		if (this->entity_list_ptr && *(this->entity_list_ptr) && this->player_entity)
 		{
+			auto dest_position = this->player_entity->feet_pos + (this->player_entity->mouse_xyz.normalized() * 10);
 			for (int i = 1; i < sizeof(*(this->entity_list_ptr)) / sizeof(*(entity_list_ptr)[0]) && (*this->entity_list_ptr)[i]; i++)
 			{
-				if ((*this->entity_list_ptr)[i] && this->player_entity && (*this->entity_list_ptr)[i]->team != this->player_entity->team)
+				if ((*this->entity_list_ptr)[i] && this->player_entity && (*this->entity_list_ptr)[i]->team != this->player_entity->team && (*this->entity_list_ptr)[i] != this->player_entity)
 				{
-					(*this->entity_list_ptr)[i]->feet_pos = this->player_entity->feet_pos + this->player_entity->mouse_xyz.normalize()*3;
+					(*this->entity_list_ptr)[i]->feet_pos = dest_position;
 				}
 			}
 		}
@@ -241,9 +231,12 @@ bool AssaultCube::handle_user_input()
 	{
 		this->menuSwitch = !this->menuSwitch;
 	}
+	if (GetAsyncKeyState(VK_F9) & 1)
+	{
+		this->isSuicide = !this->isSuicide;
+	}
 	if (GetAsyncKeyState(VK_DELETE) & 1)
 	{
-		std::cout << "Closeing!";
 		return false;
 	}
 	return true;
@@ -251,8 +244,8 @@ bool AssaultCube::handle_user_input()
 
 void AssaultCube::init_hacks()
 {
-	this->no_recoil_hack = new Hack((uintptr_t)(this->moduleBase + 0xC2EC3), (uint8_t)5);
-	this->no_fire_delay_hack = new Hack((uintptr_t)(this->moduleBase + 0xC73EA), (uint8_t)2);
+	this->no_recoil_hack = new Hack((uintptr_t)(this->moduleBase + NO_RECOIL_PATCH_OFFSET), (uint8_t)5);
+	this->no_fire_delay_hack = new Hack((uintptr_t)(this->moduleBase + NO_FIRE_DELAY_PATCH_OFFSET), (uint8_t)2);
 	this->invisibility_hack = new Hack((uintptr_t)(&(this->player_entity->is_invisible)), "\x01");
 	this->are_hacks_initiallized = true;
 }
@@ -263,11 +256,13 @@ std::vector<row> AssaultCube::HackMenu()
 	rows.push_back(row(M_HEADER, (char*)"NODER!", nullptr));
 	rows.push_back(row(M_FUNCTION, (char*)"[F1] Inf. HP          : ", &this->healthSwitch));
 	rows.push_back(row(M_FUNCTION, (char*)"[F2] Inf. Ammo        : ", &this->AmmoSwitch));
+	//rows.push_back(row(M_FUNCTION, (char*)"[F2]  Fast Fire        : ", &this->AmmoSwitch));
 	rows.push_back(row(M_FUNCTION, (char*)"[F3] Teleport Enemies", nullptr));
 	rows.push_back(row(M_FUNCTION, (char*)"[F4] Invisibility     : ", &this->invisibleSwitch));
 	rows.push_back(row(M_FUNCTION, (char*)"[F5] Aimbot           : ", &this->aimbotSwitch));
 	rows.push_back(row(M_FUNCTION, (char*)"[F6] ESP              : ", &this->espSwitch));
 	rows.push_back(row(M_LABEL, (char*)"-----------------------", nullptr));
+	rows.push_back(row(M_LABEL, (char*)"[F9] Suicide", &this->isSuicide));
 	rows.push_back(row(M_LABEL, (char*)"[INS] Hide Menu", &this->menuSwitch));
 	rows.push_back(row(M_LABEL, (char*)"[DELETE] Detach Hack :(", &this->menuSwitch));
 	rows.push_back(row(M_FOOTER, (char*)"By Lidor Shimoni", nullptr));

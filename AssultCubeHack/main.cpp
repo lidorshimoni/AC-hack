@@ -9,35 +9,36 @@ bool can_safely_unhook = true;
 GL::twglSwapBuffers owglSwapBuffers;
 BOOL __stdcall hwglSwapBuffers(HDC hDc)
 {
+	static int recursive_count = 0;
+	recursive_count++;
 	can_safely_unhook = false;
 	AC->run_once();
 
-	//GL::DrawFilledRect(100, 100, 60, 60, rgb::green);
-	
 	can_safely_unhook = true;
+	recursive_count--;
 	return owglSwapBuffers(hDc);
 }
 
 DWORD WINAPI HackThread(HMODULE hModule) {
 	// create console
-	AllocConsole();
-	FILE* stdout_file;
-	freopen_s(&stdout_file, "CONOUT$", "w", stdout);
-	
+	//AllocConsole();
+	//FILE* stdout_file;
+	//freopen_s(&stdout_file, "CONOUT$", "w", stdout);
+
 
 	AC = new AssaultCube();
-	GL::Hook("wglSwapBuffers", (uintptr_t&)owglSwapBuffers, &hwglSwapBuffers); 
+	GL::Hook("wglSwapBuffers", (uintptr_t&)owglSwapBuffers, &hwglSwapBuffers);
 	AC->run(true);
-	
-	while (!can_safely_unhook)
+
+	while (!can_safely_unhook )
 	{
 		Sleep(5);
 	}
-	GL::unHook("wglSwapBuffers", (void*)owglSwapBuffers); 
+	GL::unHook("wglSwapBuffers", (void*)owglSwapBuffers);
 	AC->~AssaultCube();
 
-	fclose(stdout_file);
-	FreeConsole();
+	//fclose(stdout_file);
+	//FreeConsole();
 	FreeLibraryAndExitThread(hModule, 0);
 	return 0;
 }

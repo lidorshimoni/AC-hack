@@ -14,8 +14,6 @@ void GL::Hook(const char* function, uintptr_t& oFunction, void* hFunction)
 void GL::unHook(const char* function, void* oFunction) {
 	LPVOID orgAddr = GetProcAddress(GetModuleHandle("opengl32.dll"), function);
 
-	std::cout << orgAddr;
-
 	DWORD curProtection;
 	VirtualProtect(orgAddr, 5, PAGE_EXECUTE_READWRITE, &curProtection);
 	memcpy_s(orgAddr, 5, oFunction, 5);
@@ -74,7 +72,7 @@ void GL::RestoreGL()
 void GL::DrawFilledRect(float x, float y, float width, float height, const GLubyte color[3])
 {
 	//glColor3ub(color[0], color[1], color[2]);
-	glColor4ub(color[0], color[1], color[2], 180);
+	glColor4ub(color[0], color[1], color[2], 220);
 	glBegin(GL_QUADS);
 	glVertex2f(x, y);
 	glVertex2f(x + width, y);
@@ -87,7 +85,7 @@ void GL::DrawOutline(float x, float y, float width, float height, float lineWidt
 {
 	glLineWidth(lineWidth);
 	glBegin(GL_LINE_STRIP);
-	glColor4ub(color[0], color[1], color[2], 180);
+	glColor4ub(color[0], color[1], color[2], 220);
 	glVertex2f(x - 0.5f, y - 0.5f);
 	glVertex2f(x + width + 0.5f, y - 0.5f);
 	glVertex2f(x + width + 0.5f, y + height + 0.5f);

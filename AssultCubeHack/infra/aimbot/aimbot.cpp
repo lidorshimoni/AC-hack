@@ -75,6 +75,7 @@ void FW::Aimbot_t::GetTarget(Player_t localPlayer)
 
 	for (auto& p : FW::Aimbot_t::players)
 	{
+		if (!p.state != ALIVE) continue;
 		if (!p.bEnemy) continue;
 		if (!p.bVisible) continue;
 

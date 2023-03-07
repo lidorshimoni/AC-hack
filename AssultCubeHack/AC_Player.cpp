@@ -48,17 +48,26 @@ AC_Player::AC_Player(playerent* ent, bool bTeamGame, int localTeam, float* matri
 	//this->bVisible = true;
 }
 
+
+//uint32_t load_eax(uint32_t eax)
+//{
+//	return eax;
+//}
+
 //void _stdcall TraceLine(vec3 from, vec3 to, void * pTracer, bool CheckPlayers, traceresult_s* tr, bool SkipTags);
 bool AC_Player::IsVisible(playerent* localent)
 {
-	return true;
-	auto traceLinePtr = (void(_cdecl *)(vec3, vec3, void*, bool, traceresult_s*, bool))0x509010;
+	//return true;
+	auto traceLinePtr = (void(_cdecl *)(vec3, vec3, void*, bool, traceresult_s*, bool))TRACELINE_FUNC_PTR;
+	//DWORD traceLineFnc = (DWORD)TRACELINE_FUNC_PTR;
 	traceresult_s traceresult;
 	traceresult.collided = false;
 	vec3 from = localent->head_pos;
 	vec3 to = *(this->head);
 
-	traceLinePtr(from, to, localent, true, &traceresult, 0);
+	//load_eax((uint32_t)&traceresult);
+	//traceLinePtr(from, to, localent, true, &traceresult, 0);
+
 	/*__asm
 	{
 		push 0; bSkipTags
@@ -71,8 +80,28 @@ bool AC_Player::IsVisible(playerent* localent)
 		push from.y
 		push from.x
 		lea eax, [traceresult]
-		call traceLine;
+		call traceLinePtr;
 		add esp, 36
 	}*/
+
+	/*DWORD lpAddr = (DWORD)localent;
+	Vec3 to{ this->head->x, this->head->y, this->head->z };
+
+	__asm {
+		push 0; bSkipTags
+		push 0; bCheckPlayers
+		push lpAddr
+		push to.z
+		push to.y
+		push to.x
+		push from.z
+		push from.y
+		push from.x
+		lea eax, [traceresult]
+		call traceLineFnc
+		add esp, 36
+	}*/
+
+
 	return !traceresult.collided;
 }

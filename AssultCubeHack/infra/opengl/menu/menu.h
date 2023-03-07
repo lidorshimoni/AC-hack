@@ -28,6 +28,7 @@ public:
 	float nextRowY;
 	int longRowStrLen;
 	std::vector<row> rows;
+	//std::vector<row> submenu;
 
 	void BuildMenu(std::vector<row> newRows, float x2, float y2);
 	void GetMenuWidth();

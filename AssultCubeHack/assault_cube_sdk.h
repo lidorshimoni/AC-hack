@@ -201,3 +201,12 @@ struct traceresult_s
 	bool collided;
 };
 
+#define TRACELINE_FUNC_PTR ((void*)0x509010)
+
+#define PLAYER_ENTITY_PTR_OFFSET (0x17E360)
+#define ENTITY_LIST_PTR_OFFSET (0x18ac04)
+#define NUMBER_OF_PLAYERS_OFFSET (0x18AC0C)
+#define VIEW_MATRIX_OFFSET (0x57dfD0)
+
+#define NO_RECOIL_PATCH_OFFSET (0xC2EC3)
+#define NO_FIRE_DELAY_PATCH_OFFSET (0xC73EA)

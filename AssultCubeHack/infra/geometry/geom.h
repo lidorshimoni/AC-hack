@@ -21,7 +21,8 @@ struct vec3
 	bool operator!=(const vec3& o) const { return x != o.x || y != o.y || z != o.z; }
 	vec3 operator-() const { return vec3(-x, -y, -z); }
 	vec3 operator + (const vec3& o) const { return vec3(this->x+o.x, this->y + o.y, this->z + o.z); }
-	vec3 operator * (float f) const { return vec3().mul(f); }
+	vec3 operator * (float f) const { return vec3(x,y,z).mul(f); }
+	vec3 operator / (float f) const { return vec3(x,y,z).div(f); }
 
 	vec3& mul(float f) { x *= f; y *= f; z *= f; return *this; }
 	vec3& div(float f) { x /= f; y /= f; z /= f; return *this; }
@@ -39,6 +40,7 @@ struct vec3
 
 	float magnitude() const { return sqrtf(squaredlen()); }
 	vec3& normalize() { div(magnitude()); return *this; }
+	vec3 normalized() { return *this/(magnitude()); }
 
 	float dist(const vec3& e) const { vec3 t; return dist(e, t); }
 	float dist(const vec3& e, vec3& t) const { t = *this; t.sub(e); return t.magnitude(); }

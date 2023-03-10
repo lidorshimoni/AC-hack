@@ -1,10 +1,10 @@
 #include "aimbot.h"
 
-void FW::ShootThread(FW::Aimbot_t* aimbot, bool* bAimbot)
+void FW::ShootThread(FW::Aimbot_t* aimbot, bool* bAimbot, bool *should_stop)
 {
 	INPUT leftMouseShoot = { 0 };
 	GLint viewport[4];
-	while (1)
+	while (*should_stop)
 	{
 		if (aimbot->target && bAimbot && GetAsyncKeyState(VK_RBUTTON))
 		{
@@ -33,9 +33,9 @@ bool FW::SortByAngle(FW::Player_t* lhs, FW::Player_t* rhs)
 	return lhs->angleDiff < rhs->angleDiff;
 }
 
-void FW::Aimbot_t::StartShootThread(bool* bAimbot)
+void FW::Aimbot_t::StartShootThread(bool* bAimbot, bool* should_stop)
 {
-	std::thread shootThread(ShootThread, this, bAimbot);
+	std::thread shootThread(ShootThread, this, bAimbot, should_stop);
 	shootThread.detach();
 }
 

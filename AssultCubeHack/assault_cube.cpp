@@ -4,8 +4,6 @@ AssaultCube::AssaultCube()
 {
 	// get module
 	this->moduleBase = (uintptr_t)GetModuleHandle("ac_client.exe");
-
-	StartShootThread(&this->aimbotSwitch);
 }
 
 AssaultCube::~AssaultCube()
@@ -16,17 +14,15 @@ AssaultCube::~AssaultCube()
 		this->no_recoil_hack->~Hack();
 }
 
-void AssaultCube::run(bool only_input)
+void AssaultCube::run()
 {
-	bool should_stop = false;
+	StartShootThread(&this->aimbotSwitch, &this->should_stop_and_unload_dll);
 
 	// hack loop
-	while (!should_stop)
+	while (!this->should_stop_and_unload_dll)
 	{
-		if (!only_input)
-			this->run_once();
-
-		should_stop = !this->handle_user_input();
+		this->run_once();
+		should_stop_and_unload_dll = !this->handle_user_input();
 
 		Sleep(10);
 	}
@@ -37,34 +33,12 @@ void AssaultCube::run(bool only_input)
 void AssaultCube::run_once()
 {
 	this->hack_loop_counter++;
-	HDC currentHDC = wglGetCurrentDC();
-
-	if (!this->menu || !this->menu->bMenuBuilt)
-	{
-		this->menu = new Menu_t;
-		this->menu->BuildMenu(HackMenu(), viewport[2] * 0.50, viewport[3] * 0.01);
-		this->menu->bMenuBuilt = true;
-	}
-	if (!this->menu->font.bBuilt || currentHDC != this->menu->font.hdc)
-	{
-		this->menu->font.Build(MENU_FONT_HEIGHT);
-	}
 
 	this->read_game_data();
 
 	this->read_player_data();
 
 	this->freeze_hack_values();
-
-	if (this->espSwitch)
-	{
-		this->draw_esp();
-	}
-
-	if (this->menuSwitch)
-	{
-		menu->Draw();
-	}
 
 	if (this->hack_loop_counter % 100 == 0) // every second
 	{
@@ -113,7 +87,6 @@ void AssaultCube::read_player_data()
 
 void AssaultCube::read_game_data()
 {
-	glGetIntegerv(GL_VIEWPORT, this->viewport);
 
 	//if ((*(this->is_game_local) == 0 || *gameMode == 4 || *gameMode == 5 || *gameMode == 7 || *gameMode == 11 || *gameMode == 13 ||
 	//	*gameMode == 14 || *gameMode == 16 || *gameMode == 17 || *gameMode == 20 || *gameMode == 21))
@@ -145,19 +118,19 @@ void AssaultCube::freeze_hack_values()
 		}
 		if (this->healthSwitch)
 		{
-			this->player_entity->health = 1337;
-			this->player_entity->armor = 1337;
+			this->player_entity->health = INT_MAX;
+			this->player_entity->armor = INT_MAX;
 		}
 		if (this->AmmoSwitch)
 		{
-			this->player_entity->grenade_ammo = 1337;
-			this->player_entity->pistol_ammo = 1337;
-			this->player_entity->assault_ammo = 1337;
-			this->player_entity->carabine_ammo = 1337;
-			this->player_entity->double_pistol_ammo = 1337;
-			this->player_entity->shotgun_ammo = 1337;
-			this->player_entity->smg_ammo = 1337;
-			this->player_entity->sniper_ammo = 1337;
+			this->player_entity->grenade_ammo = INT_MAX;
+			this->player_entity->pistol_ammo = INT_MAX;
+			this->player_entity->assault_ammo = INT_MAX;
+			this->player_entity->carabine_ammo = INT_MAX;
+			this->player_entity->double_pistol_ammo = INT_MAX;
+			this->player_entity->shotgun_ammo = INT_MAX;
+			this->player_entity->smg_ammo = INT_MAX;
+			this->player_entity->sniper_ammo = INT_MAX;
 		}
 		if (this->AmmoSwitch != this->no_recoil_hack->bStatus && this->are_hacks_initiallized )
 		{
@@ -237,6 +210,7 @@ bool AssaultCube::handle_user_input()
 	}
 	if (GetAsyncKeyState(VK_DELETE) & 1)
 	{
+		this->should_stop_and_unload_dll = true;
 		return false;
 	}
 	return true;
@@ -248,6 +222,33 @@ void AssaultCube::init_hacks()
 	this->no_fire_delay_hack = new Hack((uintptr_t)(this->moduleBase + NO_FIRE_DELAY_PATCH_OFFSET), (uint8_t)2);
 	this->invisibility_hack = new Hack((uintptr_t)(&(this->player_entity->is_invisible)), "\x01");
 	this->are_hacks_initiallized = true;
+}
+
+void AssaultCube::draw()
+{
+	glGetIntegerv(GL_VIEWPORT, this->viewport);
+	HDC currentHDC = wglGetCurrentDC();
+
+	if (!this->menu || !this->menu->bMenuBuilt)
+	{
+		this->menu = new Menu_t;
+		this->menu->BuildMenu(HackMenu(), viewport[2] * 0.01, viewport[3] * 0.01);
+		this->menu->bMenuBuilt = true;
+	}
+	if (!this->menu->font.bBuilt || currentHDC != this->menu->font.hdc)
+	{
+		this->menu->font.Build(MENU_FONT_HEIGHT);
+	}
+
+	if (this->espSwitch)
+	{
+		this->draw_esp();
+	}
+
+	if (this->menuSwitch)
+	{
+		menu->Draw();
+	}
 }
 
 std::vector<row> AssaultCube::HackMenu()

@@ -14,7 +14,7 @@ public:
 	AssaultCube();
 	~AssaultCube();
 
-	void run(bool only_input); // TODO change this and run_once naming
+	void run(); // TODO change this and run_once naming
 	void run_once();
 
 	void read_player_data();
@@ -22,12 +22,14 @@ public:
 	void freeze_hack_values();
 	void print_status();
 	bool handle_user_input();
-	void draw_esp();
+	void draw();
+
 
 	void init_hacks();
 	std::vector<row> HackMenu();
 
 private:
+	void draw_esp();
 
 	// 
 	Menu_t* menu = nullptr;
@@ -59,6 +61,8 @@ private:
 	bool espSwitch = false;
 	bool menuSwitch = true;
 	bool isSuicide = false;
+	bool should_stop_and_unload_dll = false;
+
 
 	int hack_loop_counter = 0;
 
